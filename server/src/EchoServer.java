@@ -31,7 +31,8 @@ public class EchoServer {
     private void handle(Socket socket) throws IOException{
         var input = socket.getInputStream();
         var isr = new InputStreamReader(input, "UTF-8");
-        PrintWriter writer = new PrintWriter(socket.getOutputStream());
+        var out = socket.getOutputStream();
+        var writer = new PrintWriter(out);
         try(var scanner = new Scanner(isr)){
             while (true){
                 var message = scanner.nextLine().strip();
