@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.NoSuchElementException;
@@ -30,10 +31,15 @@ public class EchoServer {
     private void handle(Socket socket) throws IOException{
         var input = socket.getInputStream();
         var isr = new InputStreamReader(input, "UTF-8");
+        PrintWriter writer = new PrintWriter(socket.getOutputStream());
         try(var scanner = new Scanner(isr)){
             while (true){
                 var message = scanner.nextLine().strip();
+                StringBuilder str = new StringBuilder(message).reverse();
                 System.out.printf("Got: %s%n", message);
+                writer.write(String.valueOf(str));
+                writer.write(System.lineSeparator());
+                writer.flush();
                 if(message.equalsIgnoreCase("bye")){
                     System.out.println("Bye bye");
                     return;
