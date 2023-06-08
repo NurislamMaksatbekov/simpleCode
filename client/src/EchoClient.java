@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.NoSuchElementException;
@@ -23,14 +24,17 @@ public class EchoClient {
         try (var socket = new Socket(host, port)) {
             var scanner = new Scanner(System.in, "UTF-8");
             var out = socket.getOutputStream();
+            var input = socket.getInputStream();
+            var isr = new InputStreamReader(input);
             var writer = new PrintWriter(out);
-            try (scanner; writer) {
+            try (scanner; writer; var sc = new Scanner(isr)) {
                 while (true) {
                     String message = scanner.nextLine();
                     writer.write(message);
                     writer.write(System.lineSeparator());
                     writer.flush();
-
+                    var answer = sc.nextLine().strip();
+                    System.out.printf("Answer: %s%n", answer);
                     if ("bye".equalsIgnoreCase(message)) {
                         return;
                     }
